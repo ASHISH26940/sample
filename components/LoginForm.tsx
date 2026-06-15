@@ -19,7 +19,11 @@ export function LoginForm() {
 
     try {
       const action = isSignUp
-        ? await nhost.auth.signUpEmailPassword({ email, password })
+        ? await nhost.auth.signUpEmailPassword({
+            email,
+            password,
+            options: { redirectTo: window.location.origin + "/login" },
+          })
         : await nhost.auth.signInEmailPassword({ email, password })
 
       if (action.body.session) {
