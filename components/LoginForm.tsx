@@ -34,55 +34,102 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-      <h1 className="text-2xl font-bold text-center">
-        {isSignUp ? "Create Account" : "Sign In"}
-      </h1>
+    <div className="w-full max-w-md bg-[#FEFAE0] border border-[#283618] p-6 flex flex-col gap-6">
+      <div className="flex flex-col gap-3 text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-[#283618]">
+          {isSignUp ? "Create Account" : "Welcome Back"}
+        </h1>
+        <p className="text-base text-[#46483c]">
+          {isSignUp
+            ? "Enter your details to get started."
+            : "Please enter your details to sign in."}
+        </p>
+      </div>
 
-      {error && (
-        <div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-600">
-          {error}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-semibold tracking-wider uppercase text-[#1b1c18]" htmlFor="email">
+            Email Address
+          </label>
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#46483c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <input
+              id="email"
+              type="email"
+              placeholder="name@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full h-12 pl-10 pr-3 bg-[#FEFAE0] border border-[#283618] focus:border-[3px] focus:border-[#283618] focus:ring-0 outline-none transition-all placeholder-[#283618]/50 text-base text-[#1b1c18]"
+            />
+          </div>
         </div>
-      )}
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="w-full rounded border px-4 py-2"
-      />
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-center">
+            <label className="text-xs font-semibold tracking-wider uppercase text-[#1b1c18]" htmlFor="password">
+              Password
+            </label>
+            {!isSignUp && (
+              <button type="button" className="text-xs font-bold text-[#283618] hover:underline">
+                Forgot password?
+              </button>
+            )}
+          </div>
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#46483c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={3}
+              className="w-full h-12 pl-10 pr-3 bg-[#FEFAE0] border border-[#283618] focus:border-[3px] focus:border-[#283618] focus:ring-0 outline-none transition-all placeholder-[#283618]/50 text-base text-[#1b1c18]"
+            />
+          </div>
+        </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="w-full rounded border px-4 py-2"
-      />
+        {error && (
+          <p className="text-xs font-bold text-[#BC6C25] flex items-center gap-1">
+            <svg className="w-4 h-4 fill-[#BC6C25]" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            {error}
+          </p>
+        )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-      >
-        {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
-      </button>
+        <div className="flex flex-col gap-3 mt-1">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full h-12 bg-[#606C38] text-[#FEFAE0] text-sm font-semibold tracking-wider uppercase hover:bg-[#283618] hover:-translate-y-px active:translate-y-0 transition-all disabled:opacity-50"
+          >
+            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
+          </button>
+        </div>
+      </form>
 
-      <button
-        type="button"
-        onClick={() => {
-          setIsSignUp(!isSignUp)
-          setError("")
-        }}
-        className="w-full text-sm text-blue-600 hover:underline"
-      >
-        {isSignUp
-          ? "Already have an account? Sign in"
-          : "Don't have an account? Sign up"}
-      </button>
-    </form>
+      <div className="text-center pt-4 border-t border-[#283618]">
+        <p className="text-base text-[#46483c]">
+          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUp(!isSignUp)
+              setError("")
+            }}
+            className="text-sm font-semibold tracking-wider uppercase text-[#283618] hover:text-[#606C38] transition-colors"
+          >
+            {isSignUp ? "Sign In" : "Sign Up"}
+          </button>
+        </p>
+      </div>
+    </div>
   )
 }

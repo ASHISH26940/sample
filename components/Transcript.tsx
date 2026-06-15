@@ -71,8 +71,7 @@ export function Transcript() {
         }
       }
 
-      ws.onerror = (e) => {
-        console.error("Deepgram WS error event:", e)
+      ws.onerror = () => {
         setError("WebSocket connection failed. Check your API key is valid and has streaming enabled.")
       }
 
@@ -101,53 +100,68 @@ export function Transcript() {
   }, [transcript])
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="flex flex-col items-center gap-6 w-full max-w-3xl">
+      {/* Recording button + indicator */}
+      <div className="flex flex-col items-center gap-4 text-center">
         <button
           onClick={isRecording ? stopRecording : startRecording}
-          className={`rounded px-6 py-2 font-medium text-white ${
+          className={`px-8 py-3 text-sm font-semibold tracking-wider uppercase border border-[#283618] transition-colors duration-200 active:translate-y-px flex items-center gap-2 ${
             isRecording
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-blue-600 hover:bg-blue-700"
+              ? "bg-[#ba1a1a] text-[#ffffff] hover:bg-[#93000a]"
+              : "bg-[#606C38] text-[#FEFAE0] hover:bg-[#283618]"
           }`}
         >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            {isRecording ? (
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            ) : (
+              <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" />
+            )}
+          </svg>
           {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
-
         {isRecording && (
-          <span className="flex items-center gap-1 font-medium text-red-600">
-            <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
-            Recording
-          </span>
-        )}
-
-        <span className="text-sm text-gray-500">Words: {wordCount}</span>
-
-        {transcript && (
-          <button
-            onClick={copyTranscript}
-            className="text-sm text-blue-600 hover:underline"
-          >
-            Copy Transcript
-          </button>
+          <div className="text-xs font-bold tracking-wider text-[#ba1a1a] flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-[#ba1a1a] animate-pulse" />
+            Live
+          </div>
         )}
       </div>
 
+      {/* Error */}
       {error && (
-        <div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-600">
+        <div className="w-full max-w-3xl border border-[#BC6C25] bg-[#FEFAE0] p-3 text-xs font-bold text-[#BC6C25] flex items-center gap-1">
+          <svg className="w-4 h-4 fill-[#BC6C25]" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
           {error}
         </div>
       )}
 
-      <div
-        ref={scrollRef}
-        className="h-64 overflow-y-auto rounded border bg-gray-50 p-4 text-gray-800"
-      >
-        {transcript || (
-          <span className="text-gray-400">
-            Press &quot;Start Recording&quot; and speak to see your transcript here...
-          </span>
-        )}
+      {/* Transcript area */}
+      <div className="w-full flex flex-col gap-3">
+        <div
+          ref={scrollRef}
+          className="w-full h-64 border border-[#283618] bg-[#FEFAE0] p-4 overflow-y-auto text-lg text-[#283618] leading-relaxed"
+        >
+          {transcript ? (
+            transcript
+          ) : (
+            <span className="opacity-50">Waiting for audio input...</span>
+          )}
+        </div>
+        <div className="flex justify-between items-center px-1">
+          <span className="text-xs font-bold opacity-70">Words: {wordCount}</span>
+          {transcript && (
+            <button
+              onClick={copyTranscript}
+              className="text-sm font-semibold tracking-wider uppercase text-[#DDA15E] hover:text-[#283618] hover:underline transition-colors flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy Transcript
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )
